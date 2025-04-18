@@ -9,14 +9,14 @@ This project is a full-featured chat platform built using **Spring Boot microser
 
 ## 🧱 System Overview
 
-![System Design](architecture/system-design.drawio.png)
+<!-- ![System Design](architecture/system-design.drawio.png) -->
 
 This project is split into multiple microservices:
 
 | Service | Description | GitHub |
 |--------|-------------|--------|
 | 🛡️ **Auth Service** | Handles registration, login, JWT token generation | [auth-service](https://github.com/minhduc8a2/chat-system-auth-service) |
-| 🔐 **API Gateway** | Central entry point, JWT filter, routing, rate limiting | [api-gateway](https://github.com/minhduc8a2/chat-system-api-gateway) |
+| 🔐 **API Gateway** | Central entry point, JWT filter, routing, rate limiting, circuit breaker | [api-gateway](https://github.com/minhduc8a2/chat-system-api-gateway) |
 | 👥 **User Service** | Manages user profiles and blocking | [user-service](https://github.com/minhduc8a2/chat-system-user-service) |
 | 💬 **Chat Service** | Manages chat rooms and WebSocket messaging | [chat-service](https://github.com/minhduc8a2/chat-system-chat-service) |
 | 📨 **Message Service** | Persists messages, Kafka consumer | [message-service](https://github.com/minhduc8a2/chat-system-message-service) |

@@ -19,7 +19,7 @@ This project is split into multiple microservices:
 | 🔐 **API Gateway** | Central entry point, JWT filter, routing, rate limiting, circuit breaker | [api-gateway](https://github.com/minhduc8a2/chat-system-api-gateway) |
 | 👥 **User Service** | Manages user profiles and blocking | [user-service](https://github.com/minhduc8a2/chat-system-user-service) |
 | 💬 **Chat Service** | Manages chat rooms and WebSocket messaging | [chat-service](https://github.com/minhduc8a2/chat-system-chat-service) |
-| 📨 **Message Service** | Persists messages, Kafka consumer | [message-service](https://github.com/minhduc8a2/chat-system-message-service) |
+| 📨 **Message Service** | Persists messages, Kafka consumer, Snowflake ID generating | [message-service](https://github.com/minhduc8a2/chat-system-message-service) |
 | 🔧 **Config Server** | Centralized config management | [config-server](https://github.com/minhduc8a2/chat-system-config-server) |
 | 🔍 **Eureka Server** | Service discovery | [eureka-server](https://github.com/minhduc8a2/chat-system-eureka-server) |
 

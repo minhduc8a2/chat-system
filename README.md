@@ -9,7 +9,7 @@ This project is a full-featured chat platform built using **Spring Boot microser
 
 ## 🧱 System Overview
 
-<!-- ![System Design](architecture/system-design.drawio.png) -->
+![System Design](architecture/system-design.drawio.png)
 
 This project is split into multiple microservices:
 

@@ -42,16 +42,89 @@ This project is divided into multiple microservices:
 
 ---
 
-## ⚙️ Deployment
-
-> Docker Compose configuration is being prepared to enable fast local deployment of all microservices.
-
----
 
 ## 📂 API Documentation
 
-> API specifications will be available soon in the `docs/` directory.
+# 🛡️ Auth Service - Chat System Microservices
 
+The **Auth Service** handles **user authentication and authorization** for the Chat System.  
+It provides secure **registration**, **login**, and **JWT token** management.
+
+---
+
+## 📜 Features
+
+- **User Registration**  
+  Allow users to create an account with secure password hashing (**BCrypt**).
+
+- **User Login**  
+  Validate credentials and issue **Access Tokens** and **Refresh Tokens**.
+
+- **JWT Token Management**
+  - Access Token: Short-lived, used for authentication in API calls.
+  - Refresh Token: Longer-lived, used to renew Access Tokens without forcing login again.
+
+- **Role Management**  
+  Support user roles `USER`, `ADMIN`.
+
+---
+
+## 🧰 Technology Stack
+
+- **Spring Boot**
+- **Spring Data JPA**
+- **Spring Data Redis**
+- **Spring Cloud OpenFeign**
+- **Spring Cloud Netflix**
+- **Spring Cloud Config**
+- **JWT (JSON Web Tokens)**
+- **Redis** (for storing refresh tokens or blacklisted tokens — optional)
+- **PostgreSQL** (for user data persistence)
+
+---
+
+## 📂 Endpoints Overview
+
+| Method | Endpoint           | Description                  |
+|--------|--------------------|------------------------------|
+| POST   | `/api/v1/auth/register` | Register a new user          |
+| POST   | `/api//v1/auth/login`    | Login and receive JWT tokens |
+| POST   | `/api/v1/auth/refresh`  | Refresh an expired access token |
+| GET   | `/internal/auth/users/{id}`  | Provider basic infomation of a user for other serivces |
+| POST   | `/internal/auth/users/batch`  | Provider basic infomation of many users for other serivces |
+
+---
+
+## 🔒 Security Details
+
+- **Password Hashing**: User passwords are hashed using **BCrypt** before storing in the database.
+- **JWT Signing**: Tokens are signed with a secret key using **HMAC SHA** algorithm.
+- **Token Expiration**: 
+  - Access Token:  15 minutes
+  - Refresh Token:  7 days
+- **Refresh Flow**:  
+  When an access token expires, clients use a refresh token to obtain a new access token without re-logging in.
+
+---
+
+## ⚙️ How Authentication Works
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant API_Gateway
+    participant Auth_Service
+    participant Backend_Service
+
+    User->>API_Gateway: POST /auth/login (username, password)
+    API_Gateway->>Auth_Service: Forward /auth/login
+    Auth_Service-->>API_Gateway: Access Token + Refresh Token
+    API_Gateway-->>User: Access Token + Refresh Token
+
+    User->>API_Gateway: Request /api/xxx with Authorization: Bearer <token>
+    API_Gateway->>API_Gateway: Validate JWT locally
+    API_Gateway->>Backend_Service: Forward request with user info
+```
 ---
 
 ## 🙋‍♂️ About the Developer

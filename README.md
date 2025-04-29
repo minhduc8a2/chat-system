@@ -120,8 +120,6 @@ A **custom JWT Authentication Filter** is configured at the Gateway level:
 | :----------- | :-------------------------------------------------------------------- |
 | AUTH-SERVICE | `/api/v1/auth/login`, `/api/v1/auth/register`, `/api/v1/auth/refresh` |
 
-> **Advice**: Always minimize the number of unprotected endpoints to reduce security risks.
-
 ---
 
 ## ♻️ Rate Limiting (Redis-Based)
@@ -280,6 +278,86 @@ sequenceDiagram
     User->>API_Gateway: Request /api/xxx with Authorization: Bearer <token>
     API_Gateway->>API_Gateway: Validate JWT locally
     API_Gateway->>Backend_Service: Forward request with user info
+```
+
+---
+
+## 🧾 Data Contracts
+
+---
+
+### LoginRequest
+
+```json
+{
+  "username": "john_doe",
+  "password": "SuperSecret123"
+}
+```
+
+---
+
+### RegisterRequest
+
+```json
+{
+  "username": "john_doe",
+  "password": "SuperSecret123",
+  "email": "john.doe@example.com"
+}
+```
+
+---
+
+### RefreshTokenRequest
+
+```json
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ..."
+}
+```
+
+---
+
+### AuthResponse
+
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ...",
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxMjMifQ..."
+}
+```
+
+---
+
+### EmailCheckingRequest
+
+```json
+{
+  "email": "john.doe@example.com"
+}
+```
+
+---
+
+### BasicUserInfoDTO
+
+```json
+{
+  "id": "1",
+  "username": "john_doe"
+}
+```
+
+---
+
+### UserDTO
+
+```json
+{
+  "email": "john.doe@example.com",
+  "authId": 1
+}
 ```
 
 ---
@@ -504,7 +582,7 @@ Configured partitions and replicas via `application.yml`:
 
 ---
 
-## 🧾 DTOs (Data Contracts)
+## 🧾 Data Contracts
 
 ### ChatRoomDTO
 
@@ -679,24 +757,6 @@ sequenceDiagram
   "timestamp": "2025-04-29T15:23:00"
 }
 ```
-
-### Message Entity (Database Representation)
-
-```json
-{
-  "id": "812738129374812160",
-  "senderId": "1",
-  "roomId": "1",
-  "content": "Hello!",
-  "type":"GROUP"
-  "created_at": "2025-04-29T15:23:00Z"
-  "updated_at": "2025-04-29T15:23:00Z"
-}
-```
-
-Here is a professionally structured and detailed `README.md` section in Markdown format for your **Chat Service** microservice:
-
----
 
 # 🙋‍♂️ About the Developer
 

@@ -241,6 +241,156 @@ sequenceDiagram
 ---
 
 
+# 🚪 `API-Gateway` 
+
+## 📜 Features
+
+The **API Gateway** acts as the single entry point for all client requests in the system.  
+It performs the following responsibilities:
+
+- Authenticate users via a **custom JWT Authentication Filter**.
+- Route requests dynamically to microservices discovered via **Eureka Discovery Service**.
+- Apply **Circuit Breakers** using **Resilience4j** to handle service failures gracefully.
+- Enforce **Rate Limiting** using **Redis Rate Limiter**.
+- Handle **Cross-Origin Resource Sharing (CORS)** configuration globally.
+- Provide **fallback routes** for degraded services.
+
+---
+## 🧰 Technology Stack
+
+- **Spring Boot**
+- **Spring Cloud Gateway**
+- **Spring Cloud Circuit Breaker (Resilience4j)**
+- **Spring Cloud Netflix Eureka**
+- **Spring Cloud Config**
+- **Redis**
+
+---
+
+## ⚙️ Spring Cloud Gateway Setup
+
+### 1. CORS Configuration
+
+CORS is globally enabled for the frontend (running on `http://localhost:5173`):
+
+- **Allowed Origins**: `http://localhost:5173`
+- **Allowed Methods**: GET, POST, PUT, DELETE, PATCH, OPTIONS
+- **Allowed Headers**: All (`*`)
+
+### 2. Dynamic Routing and Service Discovery
+
+Service discovery is enabled via Eureka:
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+```
+
+This allows automatic service registration and dynamic URI resolution using the `lb://` (Load Balancer) prefix.
+
+---
+
+## 🔒 JWT Authentication
+
+A **custom JWT Authentication Filter** is configured at the Gateway level:
+
+- Verifies JWT in the `Authorization: Bearer <token>` header.
+- Authenticates the request before forwarding it to downstream services.
+- Routes with **unprotected endpoints** (like login, register, refresh token) are **excluded** from authentication.
+
+**Unprotected Endpoints Example**:
+
+| Service | Unprotected Endpoints |
+|:--------|:----------------------|
+| AUTH-SERVICE | `/api/v1/auth/login`, `/api/v1/auth/register`, `/api/v1/auth/refresh` |
+
+> **Advice**: Always minimize the number of unprotected endpoints to reduce security risks.
+
+---
+
+## ♻️ Rate Limiting (Redis-Based)
+
+Each route is protected with a **rate limiter**:
+
+- **Replenish Rate**: 3 requests/second
+- **Burst Capacity**: 5 requests maximum
+- **Requested Tokens per Request**: 1
+
+Rate limiting is based on a **userKeyResolver**, ensuring that each user/IP address is limited individually.
+
+**Example**:
+
+```yaml
+filters:
+  - name: RequestRateLimiter
+    args:
+      redis-rate-limiter.replenishRate: 3
+      redis-rate-limiter.burstCapacity: 5
+      redis-rate-limiter.requestedTokens: 1
+      key-resolver: "#{@userKeyResolver}"
+```
+
+---
+
+## 🛡️ Circuit Breaker (Resilience4j)
+
+Circuit Breakers are applied for service resilience:
+
+### Default Settings Example (for User Service):
+
+| Property | Value |
+|:---------|:------|
+| Sliding Window Size | 5 requests |
+| Permitted Calls in Half-Open State | 2 |
+| Failure Rate Threshold | 50% |
+| Wait Duration in Open State | 10 seconds |
+
+**Behavior**:
+
+- If 50% of 5 requests fail, the circuit opens for 10 seconds.
+- After 10 seconds, 2 trial requests are permitted before closing the circuit.
+
+**Fallback**:  
+When a circuit is open, requests are forwarded to `/fallback`.
+
+---
+
+## 🗺️ Defined Routes
+
+| Route ID | Path | Destination | Special Filters |
+|:---------|:-----|:------------|:----------------|
+| `user_service_route` | `/api/v1/users/**` | `lb://USER-SERVICE` | Rate Limiter, Circuit Breaker |
+| `auth_service_route` | `/api/v1/auth/**` | `lb://AUTH-SERVICE` | Rate Limiter, Circuit Breaker |
+| `chat_service_route` | `/api/v1/chat/**` | `lb://CHAT-SERVICE` | Rate Limiter, Circuit Breaker |
+
+---
+
+## 🖥️ Monitoring and Management
+
+Spring Boot Actuator is enabled:
+
+- Access `/actuator/gateway/routes` to see all routes dynamically.
+- `/actuator/health` provides the Gateway health status.
+
+Expose all endpoints:
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+---
+
+
+
+
 ## 🙋‍♂️ About the Developer
 
 This project is built by **@minhduc8a2** as a learning project and portfolio showcase demonstrating modern backend engineering techniques.  

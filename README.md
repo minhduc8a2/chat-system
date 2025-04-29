@@ -78,8 +78,8 @@ It provides secure **registration**, **login**, and **JWT token** management.
 - **Spring Cloud Netflix**
 - **Spring Cloud Config**
 - **JWT (JSON Web Tokens)**
-- **Redis** (for storing refresh tokens or blacklisted tokens — optional)
-- **PostgreSQL** (for user data persistence)
+- **Redis** 
+- **PostgreSQL**
 
 ---
 
@@ -126,6 +126,120 @@ sequenceDiagram
     API_Gateway->>Backend_Service: Forward request with user info
 ```
 ---
+
+# 👥 User Service - Chat System Microservices
+
+The **User Service** manages **user profile data** within the Chat System.  
+It provides APIs to **create**, **fetch**, **update**, and **list** user profiles securely and efficiently.
+
+---
+
+## 📜 Features
+
+- **User Creation**  
+  Create a new user profile upon successful registration at the Auth Service.
+
+- **Email Existence Checking**  
+  Allow verification if an email address is already registered (for frontend validations).
+
+- **User Profile Retrieval**  
+  Fetch complete user information by their **Auth ID**.
+
+- **User Profile Update**  
+  Support partial updates to a user's public profile .
+
+- **Paginated User Listing**  
+  Provide paginated and sorted listing of all user profiles for admin or system needs.
+
+---
+
+## 🧰 Technology Stack
+
+- **Spring Boot**
+- **Spring Data JPA**
+- **Spring Data Redis**
+- **Spring Cloud Netflix Eureka**
+- **Spring Cloud Config**
+- **Hibernate Validator**
+- **Redis**
+- **PostgreSQL**
+
+---
+
+## 📂 Endpoints Overview
+
+| Method  | Endpoint                       | Description                                              |
+|---------|---------------------------------|----------------------------------------------------------|
+| POST    | `/api/v1/users/email_exists`    | Check if an email address already exists                 |
+| POST    | `/api/v1/users`                 | Create a new user profile                                |
+| GET     | `/api/v1/users/{authId}`         | Get user profile information by authentication ID        |
+| PATCH   | `/api/v1/users/{authId}`         | Partially update a user profile       |
+| GET     | `/api/v1/users`                  | Get a paginated and sorted list of all users              |
+
+---
+
+## 🔒 Security Details
+
+- **Authentication Required**:  
+  Accessing user information generally requires a valid **JWT token** via API Gateway.
+
+- **Input Validation**:  
+  All incoming requests are validated using **Hibernate Validator** annotations (e.g., `@Valid`, `@Min(1)`).
+
+
+---
+
+## ⚙️ How the User Profile Creation Flow Works
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant API_Gateway
+    participant Auth_Service
+    participant Auth_Database
+    participant User_Service
+    participant User_Database
+
+    User->>API_Gateway: POST /api/v1/auth/register (email, password, etc.)
+    API_Gateway->>Auth_Service: Forward register request
+    Auth_Service->>Auth_Database: Save authentication data (email, password, roles)
+    Auth_Database-->>Auth_Service: Saved confirmation
+    Auth_Service->>User_Service: POST /api/v1/users (UserDTO) via OpenFeign
+    User_Service->>User_Database: Save user profile (username, avatar, etc.)
+    User_Database-->>User_Service: Saved confirmation
+    User_Service-->>Auth_Service: Profile created
+    Auth_Service-->>API_Gateway: Registration completed
+    API_Gateway-->>User: Access Token + Refresh Token
+```
+
+---
+
+## 📁 Data Contracts
+
+### Create User Profile Request (`UserDTO`)
+```json
+{
+  "authId": 123,
+  "email": "user@example.com",
+}
+```
+
+### Check Email Existence Request (`EmailCheckingRequest`)
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+### Update User Profile Request (`ClientUserDTO`)
+```json
+{
+  "email": "updated@example.com",
+}
+```
+
+---
+
 
 ## 🙋‍♂️ About the Developer
 

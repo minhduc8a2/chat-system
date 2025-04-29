@@ -19,7 +19,9 @@ It supports:
 4. [User Service](#-user-service---chat-system-microservices)
 5. [Chat Service](#-chat-service---chat-system-microservices)
 6. [Message Service](#-message-service---chat-system-microservices)
-7. [About Developer](#️-about-the-developer)
+7. [Config Service](#️-config-service)
+8. [Eureka Server](#-eureka-server)
+9. [About Developer](#️-about-the-developer)
 
 ## 🧱 System Overview
 
@@ -757,6 +759,113 @@ sequenceDiagram
   "timestamp": "2025-04-29T15:23:00"
 }
 ```
+
+Certainly! Here's a professional and well-structured **Markdown documentation** section for your **Config Service** in a Spring Cloud-based microservices architecture:
+
+---
+
+## ⚙️ Config Service
+
+### 📘 Overview
+
+The **Config Service** acts as a centralized configuration server that manages and serves externalized configuration for all microservices in the system. It allows dynamic updates and consistent configurations across environments (development, staging, production), supporting both versioning and Git-backed configuration.
+
+This service is built using **Spring Cloud Config Server**, which reads configurations from a Git repository and exposes them via HTTP endpoints to client applications.
+
+---
+
+### 🚀 Responsibilities
+
+- Centralize and externalize configurations for all services.
+- Support environment-specific configurations.
+- Enable dynamic refresh of configurations using Spring Cloud Bus (optional).
+- Secure configuration access via role-based permissions (optional).
+
+---
+
+### 🛠️ Technologies
+
+- Spring Boot
+- Spring Cloud Config Server
+- GitHub (for configuration storage)
+
+---
+
+### 🔧 How Clients Connect
+
+Each microservice (e.g., `chat-service`, `auth-service`, etc.) connects to the Config Service by setting:
+
+```yaml
+spring:
+  config:
+    import: optional:configserver:http://localhost:8080
+```
+
+And by setting the service name so it pulls the corresponding config:
+
+```yaml
+spring:
+  application:
+    name: chat-service
+```
+
+This will fetch `chat-service.yml` or `chat-service-{profile}.yml`
+`chat-service.properties` or `chat-service-{profile}.properties` from the Git repo.
+
+---
+
+## 📡 Eureka Server
+
+### 📘 Overview
+
+The **Eureka Server** is a core component in a microservices architecture, responsible for **service discovery**. It maintains a registry of all microservices and enables client-side load balancing and failover by letting services register themselves and discover other services dynamically.
+
+---
+
+### 🚀 Responsibilities
+
+- Act as a **service registry** where all microservices (clients) can register themselves.
+- Provide a **discovery mechanism** for clients to locate other services by name instead of hardcoded URLs.
+- Support dynamic updates to the registry (when services scale up/down or fail).
+- Enable health check integration to remove unhealthy instances from the registry.
+
+---
+
+### 🛠️ Technologies
+
+- Spring Boot
+- Spring Cloud Netflix Eureka Server
+
+---
+
+### 🧾`application.properties`
+
+```properties
+spring.application.name=eureka-server
+server.port=8761
+
+# Disable client behavior (this server doesn't register itself)
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+```
+
+---
+
+### 🌐 Accessing the Eureka Dashboard
+
+Once the server is running on port `8761`, navigate to:
+
+```
+http://localhost:8761
+```
+
+---
+
+### 🧩 How Services Register
+
+Other services (e.g., `auth-service`, `chat-service`) need to include the `spring-cloud-starter-netflix-eureka-client` dependency.
+
+---
 
 # 🙋‍♂️ About the Developer
 

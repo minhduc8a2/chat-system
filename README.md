@@ -42,7 +42,7 @@ This project is divided into multiple microservices:
 
 ## 🚀 Technologies Used
 
-- **Backend:** Spring Boot 3, Spring Security, JWT, Spring Cloud Gateway, WebSocket
+- **Backend:** Spring Boot, Spring Security, JWT, Spring Cloud Gateway, WebSocket
 - **Messaging:** Kafka
 - **Caching:** Redis
 - **Database:** PostgreSQL
@@ -51,8 +51,6 @@ This project is divided into multiple microservices:
 - **Architecture:** Microservices
 
 ---
-
-## 📂 API Documentation
 
 # 🚪 `API-Gateway`
 

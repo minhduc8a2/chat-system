@@ -21,7 +21,8 @@ It supports:
 6. [Message Service](#-message-service---chat-system-microservices)
 7. [Config Service](#️-config-service)
 8. [Eureka Server](#-eureka-server)
-9. [About Developer](#️-about-the-developer)
+9. [Chat System Frontend](#-chat-system-frontend)
+10. [About Developer](#️-about-the-developer)
 
 ## 🧱 System Overview
 
@@ -864,6 +865,89 @@ http://localhost:8761
 ### 🧩 How Services Register
 
 Other services (e.g., `auth-service`, `chat-service`) need to include the `spring-cloud-starter-netflix-eureka-client` dependency.
+
+---
+
+# 📱 Chat System Frontend
+
+This is the **frontend** of a scalable chat system built with **React** and **TypeScript**, designed for performance and maintainability. It supports **real-time communication**, **JWT-based authentication**, and **presence tracking**. The system is integrated with backend services via REST and WebSocket using **STOMP** protocol.
+
+---
+
+## ⚙️ Tech Stack
+
+- **React**
+- **TypeScript** for static typing
+- **Redux Toolkit** for app-wide state management
+- **TanStack Query (React Query)** for async data fetching and caching
+- **TanStack Virtual** for performant list virtualization
+- **HeroUI** for accessible UI components
+- **STOMP over WebSocket** for real-time chat via `@stomp/stompjs`
+- **Axios** with JWT token refresh interceptor
+
+---
+
+## 🚀 Highlights
+
+- ⚡ **Virtualized Lists**: Efficient rendering of large chat history using `TanStack Virtual`.
+- 🔐 **Secure Authentication**: JWT access/refresh token handling with auto-refresh and retry queue.
+- 🧠 **Optimistic UI**: Instant UI updates with intelligent caching via TanStack Query.
+- 🔄 **Real-time Communication**: Bi-directional WebSocket messaging via STOMP protocol.
+- 🌐 **Presence Tracking**: Tracks user online status via heartbeat logic.
+- 🧰 **Modular DTO Models**: Strongly typed classes/interfaces for API responses.
+
+---
+
+
+
+## 🔄 Axios Interceptor
+
+Handles:
+
+- Automatic token refresh on `401`
+- Retry queue for requests during refresh
+- Logout redirection when refresh fails
+---
+
+## 🔁 Client-Side Routing
+
+This frontend application is built as a **Single Page Application (SPA)** using **[React Router](https://reactrouter.com/)** to manage in-app navigation without full page reloads. It supports public and protected routes with context-based authentication.
+
+### 🚦 Routing Features
+
+- **Protected Routing**: Uses a custom `PrivateRoute` component to secure authenticated routes
+- **Route Redirection**: Automatically redirects unauthenticated users to `/login`
+- **Context-Based Access**: Routing decisions are based on `AuthContext` state
+- **Component-Based Routing**: Routes map directly to UI components for maintainability
+
+---
+
+### 📁 Route Structure
+
+| Path            | Component         | Access       | Description                              |
+|------------------|-------------------|--------------|------------------------------------------|
+| `/`              | `App`             | 🔐 Protected | Default landing page after login         |
+| `/chat`          | `Chat`            | 🔐 Protected | Main chat interface                      |
+| `/profile`       | `Profile`         | 🔐 Protected | User profile dashboard                   |
+| `/login`         | `Login`           | 🔓 Public    | Login screen for unauthenticated users   |
+| `/register`      | `Register`        | 🔓 Public    | User account registration                |
+
+---
+
+### 🛡️ Private Route Logic
+
+The `PrivateRoute` component ensures that only authenticated users (based on `AuthContext`) can access certain routes. If the user is not logged in, they are redirected to `/login`.
+
+```tsx
+import { useContext } from "react"
+import { Navigate } from "react-router-dom"
+import { AuthContext, AuthContextType } from "../../context/AuthContext"
+
+export default function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useContext<AuthContextType>(AuthContext)
+  return isAuthenticated ? children : <Navigate to="/login" />
+}
+```
 
 ---
 

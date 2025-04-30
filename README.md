@@ -746,9 +746,19 @@ sequenceDiagram
 
 ---
 
+## 📂 Endpoints Overview
+
+### 🌐 REST API (HTTP)
+
+| Method | Endpoint                                                               | Description                                                                      |
+| ------ | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| GET    | `/api/v1/messages/rooms/{chatRoomId}/last_read_message_id/{messageId}` | Fetch all unread messages in a chat room since `messageId` for the current user. |
+
+---
+
 ## 📁 Data Contracts
 
-### Kafka Message Payload (`MessageDTO`)
+### Message Payload (`MessageDTO`)
 
 ```json
 {
@@ -760,8 +770,6 @@ sequenceDiagram
   "timestamp": "2025-04-29T15:23:00"
 }
 ```
-
-Certainly! Here's a professional and well-structured **Markdown documentation** section for your **Config Service** in a Spring Cloud-based microservices architecture:
 
 ---
 
@@ -898,8 +906,6 @@ This is the **frontend** of a scalable chat system built with **React** and **Ty
 
 ---
 
-
-
 ## 🔄 Axios Interceptor
 
 Handles:
@@ -907,47 +913,31 @@ Handles:
 - Automatic token refresh on `401`
 - Retry queue for requests during refresh
 - Logout redirection when refresh fails
+
 ---
 
 ## 🔁 Client-Side Routing
 
-This frontend application is built as a **Single Page Application (SPA)** using **[React Router](https://reactrouter.com/)** to manage in-app navigation without full page reloads. It supports public and protected routes with context-based authentication.
+This frontend application is built as a **Single Page Application (SPA)** using **[Tanstack Router](https://reactrouter.com/)** to manage in-app navigation without full page reloads. It supports public and protected routes with authentication status.
 
 ### 🚦 Routing Features
 
-- **Protected Routing**: Uses a custom `PrivateRoute` component to secure authenticated routes
+- **Protected Routing**: Check authentication status to secure authenticated routes
 - **Route Redirection**: Automatically redirects unauthenticated users to `/login`
-- **Context-Based Access**: Routing decisions are based on `AuthContext` state
-- **Component-Based Routing**: Routes map directly to UI components for maintainability
 
 ---
 
 ### 📁 Route Structure
 
-| Path            | Component         | Access       | Description                              |
-|------------------|-------------------|--------------|------------------------------------------|
-| `/`              | `App`             | 🔐 Protected | Default landing page after login         |
-| `/chat`          | `Chat`            | 🔐 Protected | Main chat interface                      |
-| `/profile`       | `Profile`         | 🔐 Protected | User profile dashboard                   |
-| `/login`         | `Login`           | 🔓 Public    | Login screen for unauthenticated users   |
-| `/register`      | `Register`        | 🔓 Public    | User account registration                |
+| Path         | Component  | Access       | Description                            |
+| ------------ | ---------- | ------------ | -------------------------------------- |
+| `/`          | `App`      | 🔐 Protected | Default landing page after login       |
+| `/chat`      | `Chat`     | 🔐 Protected | Main chat interface                    |
+| `/chat/{id}` | `Chat`     | 🔐 Protected | Chat room interface                    |
+| `/profile`   | `Profile`  | 🔐 Protected | User profile dashboard                 |
+| `/login`     | `Login`    | 🔓 Public    | Login screen for unauthenticated users |
+| `/register`  | `Register` | 🔓 Public    | User account registration              |
 
----
-
-### 🛡️ Private Route Logic
-
-The `PrivateRoute` component ensures that only authenticated users (based on `AuthContext`) can access certain routes. If the user is not logged in, they are redirected to `/login`.
-
-```tsx
-import { useContext } from "react"
-import { Navigate } from "react-router-dom"
-import { AuthContext, AuthContextType } from "../../context/AuthContext"
-
-export default function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useContext<AuthContextType>(AuthContext)
-  return isAuthenticated ? children : <Navigate to="/login" />
-}
-```
 
 ---
 

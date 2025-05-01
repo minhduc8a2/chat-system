@@ -30,28 +30,116 @@ It supports:
 
 This project is divided into multiple microservices:
 
-| Service                | Description                                                                                                                              | GitHub                                                                       |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| 🛡️ **Auth Service**    | Handles **registration**, **login**, **JWT token generation**                                                                            | [auth-service](https://github.com/minhduc8a2/chat-system-auth-service)       |
-| 🔐 **API Gateway**     | Central entry point, **JWT filtering**, **routing**, **rate limiting**, **circuit breaker**                                              | [api-gateway](https://github.com/minhduc8a2/chat-system-api-gateway)         |
-| 👥 **User Service**    | Manages **user profiles**                                                                                                                | [user-service](https://github.com/minhduc8a2/chat-system-user-service)       |
-| 💬 **Chat Service**    | **WebSocket authentication**, **chat room management**, **real-time messaging**, **online status tracking**, **Snowflake ID generation** | [chat-service](https://github.com/minhduc8a2/chat-system-chat-service)       |
-| 📨 **Message Service** | Persists **chat messages**                                                                                                               | [message-service](https://github.com/minhduc8a2/chat-system-message-service) |
-| 🔧 **Config Server**   | Centralized **configuration management**                                                                                                 | [config-server](https://github.com/minhduc8a2/chat-system-config-server)     |
-| 🔍 **Eureka Server**   | **Service discovery** and **health monitoring**                                                                                          | [eureka-server](https://github.com/minhduc8a2/chat-system-eureka-server)     |
-| 🖥️ **Frontend**        | React-based client for **chat interface**                                                                                                | [frontend](https://github.com/minhduc8a2/chat-system-frontend)               |
+| Service                | Description                                                                                                                                                           | GitHub                                                                       |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 🛡️ **Auth Service**    | Handles **user registration**, **login**, and **JWT token issuance**                                                                                                  | [auth-service](https://github.com/minhduc8a2/chat-system-auth-service)       |
+| 🔐 **API Gateway**     | Central entry point for all services: **JWT authentication**, **request routing**, **rate limiting**, and **circuit breaking**                                        | [api-gateway](https://github.com/minhduc8a2/chat-system-api-gateway)         |
+| 👥 **User Service**    | Manages **user profiles**, including **profile updates** and **public info exposure**                                                                                 | [user-service](https://github.com/minhduc8a2/chat-system-user-service)       |
+| 💬 **Chat Service**    | Manages **WebSocket authentication**, **chat rooms**, **real-time messaging**, **user presence tracking**, **per-room read tracking** and **Snowflake ID generation** | [chat-service](https://github.com/minhduc8a2/chat-system-chat-service)       |
+| 📨 **Message Service** | Persists **chat messages**; supports **infinite scroll**, **message history**                                                                                         | [message-service](https://github.com/minhduc8a2/chat-system-message-service) |
+| 🔧 **Config Server**   | Provides centralized and version-controlled **configuration management** for all microservices                                                                        | [config-server](https://github.com/minhduc8a2/chat-system-config-server)     |
+| 🔍 **Eureka Server**   | Enables **service discovery**, **instance registration**, and **health monitoring**                                                                                   | [eureka-server](https://github.com/minhduc8a2/chat-system-eureka-server)     |
+| 🖥️ **Frontend**        | React-based SPA client with **chat UI**, **client-side routing** via Tanstack Router, and **optimized virtual list rendering** for scalable message panels            | [frontend](https://github.com/minhduc8a2/chat-system-frontend)               |
 
 ---
 
 ## 🚀 Technologies Used
 
-- **Backend:** Spring Boot, Spring Security, JWT, Spring Cloud Gateway, WebSocket
-- **Messaging:** Kafka
-- **Caching:** Redis
-- **Database:** PostgreSQL
-- **Service Discovery & Config:** Eureka, Spring Cloud Config
-- **Containerization:** Docker, Docker Compose
-- **Architecture:** Microservices
+This project is built with a **cloud-native microservices architecture**, focusing on scalability, modularity, and real-time interaction.
+
+---
+
+### 🧠 Core Backend Technologies
+
+- **Java 17+** – Modern Java language features and strong typing
+- **Spring Boot** – Framework for developing microservices with embedded servers
+- **Spring Security** – Authentication and authorization framework
+- **JWT (JSON Web Token)** – Stateless, token-based authentication
+- **Spring Cloud Gateway** – Reactive gateway for routing and filtering
+- **Spring WebSocket (STOMP protocol)** – Enables full-duplex real-time communication
+
+---
+
+### 📨 Messaging and Communication
+
+- **Apache Kafka** – Distributed event streaming platform
+- **Spring for Apache Kafka** – Kafka integration with Spring Boot
+- **Kafka Topics:**
+
+  - `chat-messages` – Chat message delivery and persistence
+  - `presence-messages` – Online status broadcasts
+  - `command-messages` – System commands to clients
+
+---
+
+### 💾 Caching, Rate Limiting & Session State
+
+- **Redis** – Used for:
+
+  - Caching
+  - Presence tracking
+  - WebSocket session tracking
+  - Redis Rate Limiter (via Spring Cloud Gateway)
+
+---
+
+### 🗄️ Databases
+
+- **PostgreSQL** – Relational database for structured data persistence (e.g., messages, users)
+- **Spring Data JPA** – Object-Relational Mapping (ORM) framework for PostgreSQL
+
+---
+
+### 🔍 Service Discovery & Configuration
+
+- **Eureka Server** – For service registration and load balancing
+- **Spring Cloud Netflix Eureka Client** – Enables microservices to register with Eureka
+- **Spring Cloud Config Server** – Centralized and Git-based external configuration
+
+---
+
+### 📦 Containerization & Deployment
+
+- **Docker** – Containerize each microservice for portability
+- **Docker Compose** – Define and run multi-container environments (ideal for local development)
+
+---
+
+### 🛠️ Developer Tools and Frameworks
+
+- **Lombok** – Simplifies Java boilerplate (e.g., getters, constructors)
+- **Spring Cloud OpenFeign** – Declarative REST clients for inter-service communication
+- **Hibernate Validator** – Bean validation for request DTOs
+
+---
+
+### 🖥️ Frontend (React SPA)
+
+- **React + TypeScript** – Strongly typed component-based UI development
+- **TanStack Router** – Modern routing library for single-page apps
+- **TanStack Query (React Query)** – Data fetching with intelligent caching and refetching
+- **TanStack Virtual** – Efficient list virtualization (infinite scroll support)
+- **Redux Toolkit** – Global state management (auth, UI, etc.)
+- **HeroUI** – Headless UI component library with accessibility
+- **STOMP over WebSocket** – Real-time chat via `@stomp/stompjs`
+- **Axios** – Promise-based HTTP client with JWT interceptor for refresh token logic
+
+---
+
+### 🧪 Monitoring & Observability
+
+- **Spring Boot Actuator** – Exposes health checks, metrics, and runtime endpoints
+- **Resilience4j** – Circuit breaker pattern integration for Gateway fault tolerance
+- **Custom KeyResolvers** – Used for user/IP-specific rate limiting
+
+---
+
+### 🧱 Architecture
+
+- **Domain-driven Microservices Architecture** – Clear separation of concerns and scalability
+- **Stateless Services** – Built to scale horizontally with no local state
+- **Event-Driven Communication** – Kafka-based asynchronous processing
+- **WebSocket Scaling with Kafka** – Cross-instance message fan-out
 
 ---
 
@@ -247,8 +335,8 @@ It provides secure **registration**, **login**, and **JWT token** management.
 | POST   | `/api/v1/auth/register`      | Register a new user                                        |
 | POST   | `/api//v1/auth/login`        | Login and receive JWT tokens                               |
 | POST   | `/api/v1/auth/refresh`       | Refresh an expired access token                            |
-| GET    | `/internal/auth/users/{id}`  | Provider basic infomation of a user for other serivces     |
-| POST   | `/internal/auth/users/batch` | Provider basic infomation of many users for other serivces |
+| GET    | `/internal/auth/users/{id}`  | Provide basic infomation of a user for other serivces     |
+| POST   | `/internal/auth/users/batch` | Provide basic infomation of many users for other serivces |
 
 ---
 
@@ -504,6 +592,9 @@ It uses **WebSocket with STOMP** for live communication, **Redis** for presence 
 
 - **Presence Event Broadcasting**  
   Notify other users in the same room when someone joins, disconnects, or reconnects.
+- **Last-Seen Per-Room Tracking**
+  Records the last active timestamp for each user per chat room.
+  Used to load unread messages and generate notification badges or "new messages" indicators.
 
 ---
 
@@ -526,22 +617,24 @@ It uses **WebSocket with STOMP** for live communication, **Redis** for presence 
 
 ### 🌐 REST API (HTTP)
 
-| Method | Endpoint                                                        | Description                                                    |
-| ------ | --------------------------------------------------------------- | -------------------------------------------------------------- |
-| POST   | `/api/v1/chat/chat-rooms`                                       | Create a new chat room                                         |
-| GET    | `/api/v1/chat/chat-rooms`                                       | List all chat rooms (pagination supported)                     |
-| GET    | `/api/v1/chat/chat-rooms/user`                                  | List rooms joined by the current user                          |
-| POST   | `/api/v1/chat/chat-rooms/join/{id}`                             | Join a specific chat room                                      |
-| GET    | `/internal/chat/chat-rooms/{id}/presence/websocket/users/batch` | Check online status of users in a room for other microservices |
+| Method | Endpoint                                                        | Description                                                                              |
+| ------ | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| POST   | `/api/v1/chat/chat-rooms`                                       | Create a new chat room                                                                   |
+| GET    | `/api/v1/chat/chat-rooms`                                       | List all chat rooms (pagination supported)                                               |
+| GET    | `/api/v1/chat/chat-rooms/user`                                  | List rooms joined by the current user                                                    |
+| POST   | `/api/v1/chat/chat-rooms/join/{id}`                             | Join a specific chat room                                                                |
+| GET    | `/internal/chat/chat-rooms/{id}/presence/websocket/users/batch` | Check online status of users in a room for other microservices                           |
+| GET    | `/internal/chat/room_last_seen?chatRoomId={id}&userId={id}`     | Get the last seen timestamp of a user in a specific room (used for unseen message logic) |
 
 ### 📡 WebSocket (STOMP)
 
-| Destination                   | Description                           |
-| ----------------------------- | ------------------------------------- |
-| `/app/chat.send/{chatroomId}` | Send message to a chatroom            |
-| `/app/heartbeat`              | Heartbeat ping to keep presence alive |
-| `/user/queue/errors`          | Receive error messages from server    |
-| `/user/queue/heartbeatReply`  | Receive pong response to heartbeat    |
+| Destination                                | Description                                               |
+| ------------------------------------------ | --------------------------------------------------------- |
+| `/app/chat.send/{chatroomId}`              | Send message to a chatroom                                |
+| `/app/heartbeat`                           | Heartbeat ping to keep presence alive                     |
+| `/app/unsubscribe/chat_rooms/{chatroomId}` | Called when user leaves a chatroom tab (tracks last seen) |
+| `/user/queue/errors`                       | Receive error messages from server                        |
+| `/user/queue/heartbeatReply`               | Receive pong response to heartbeat                        |
 
 ---
 
@@ -646,10 +739,11 @@ Configured partitions and replicas via `application.yml`:
 
 ## 🗄️ Redis Key Patterns
 
-| Purpose            | Redis Key Format          |
-| ------------------ | ------------------------- |
-| Presence tracking  | `presence:user:{userId}`  |
-| WebSocket tracking | `websocket:user:{userId}` |
+| Purpose                     | Redis Key Format            |
+| --------------------------- | --------------------------- |
+| Presence tracking           | `presence:user:{userId}`    |
+| WebSocket tracking          | `websocket:user:{userId}`   |
+| Last-Seen Per-Room Tracking | `active_room:user:{userId}` |
 
 ---
 
@@ -696,6 +790,8 @@ It consumes messages from **Kafka topics** produced by the **Chat Service** and 
 
 - **Structured Message Model**  
   Define and enforce message schemas (e.g., sender, receiver, content, timestamp) for consistency.
+- **Infinite Scroll & Unseen Messages Support**
+  Optimized to support infinite scroll pagination for chat history and "unseen messages" logic using per-user, per-room lastSeen timestamps.
 
 ---
 
@@ -707,6 +803,7 @@ It consumes messages from **Kafka topics** produced by the **Chat Service** and 
 - **Spring Data Redis**
 - **PostgreSQL**
 - **Apache Kafka**
+- **Spring Cloud OpenFeign**
 - **Spring Cloud Netflix Eureka**
 - **Spring Cloud Config**
 
@@ -720,12 +817,12 @@ It consumes messages from **Kafka topics** produced by the **Chat Service** and 
 
 ---
 
-## 🔐 Security Considerations
+<!-- ## 🔐 Security Considerations
 
-- **Data Sanitization**:  
+- **Data Sanitization**:
   The message content is sanitized before storage to prevent injection attacks and maintain clean records.
 
----
+--- -->
 
 ## 🧭 Message Processing Flow
 
@@ -750,9 +847,10 @@ sequenceDiagram
 
 ### 🌐 REST API (HTTP)
 
-| Method | Endpoint                                                               | Description                                                                      |
-| ------ | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| GET    | `/api/v1/messages/rooms/{chatRoomId}/last_read_message_id/{messageId}` | Fetch all unread messages in a chat room since `messageId` for the current user. |
+| Method | Endpoint                                                      | Description                                                                             |
+| ------ | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| GET    | `/api/v1/messages?chatRoomId={id}&messageId={id}&type={type}` | Fetch chat messages in infinite scroll mode (older or newer) using messageId as anchor. |
+| GET    | `/api/v1/messages/last_seen?chatRoomId={id}`                  | Fetch messages from the user’s last seen timestamp in the given chat room.              |
 
 ---
 
@@ -768,6 +866,16 @@ sequenceDiagram
   "content": "Hello!",
   "type":"GROUP"
   "timestamp": "2025-04-29T15:23:00"
+}
+```
+
+### InfiniteScroll Messages Payload (`InfiniteScrollResult<MessageDTO>`)
+
+```json
+{
+  "data": "[]",
+  "hasMoreOnTop": "false",
+  "hasMoreOnBottom": "false"
 }
 ```
 
@@ -937,7 +1045,6 @@ This frontend application is built as a **Single Page Application (SPA)** using 
 | `/profile`   | `Profile`  | 🔐 Protected | User profile dashboard                 |
 | `/login`     | `Login`    | 🔓 Public    | Login screen for unauthenticated users |
 | `/register`  | `Register` | 🔓 Public    | User account registration              |
-
 
 ---
 

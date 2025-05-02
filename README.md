@@ -1047,6 +1047,54 @@ This frontend application is built as a **Single Page Application (SPA)** using 
 | `/register`  | `Register` | 🔓 Public    | User account registration              |
 
 ---
+### 📷 User Interface Screenshots
+
+Below are screenshots showcasing the main user interface of the chat system.
+
+#### 🔐 Authentication
+- **Login Page**
+
+![Login Page](screenshot/login.png)
+
+- **Register Page**
+
+![Register Page](screenshot/register.png)
+
+
+#### 📁 Navigation
+
+- **Drawer Page**
+
+![Drawer](screenshot/drawer.png)
+
+#### 💬 Chat Functionality
+
+- **Chat Room**
+
+![Chat Room](screenshot/chat_room.png)
+
+- **Create Room**
+
+![Create Room](screenshot/create_room.png)
+
+- **Join Room**
+
+
+![Join Room](screenshot/join_room.png)
+
+#### 👤 User Profile Management
+
+- **User Profile**
+
+![User Profile](screenshot/profile.png)
+
+- **Update Profile**
+
+![Update Profile](screenshot/update_profile.png)
+
+
+
+---
 
 # 🙋‍♂️ About the Developer
 
